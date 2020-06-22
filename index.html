@@ -16,6 +16,8 @@
         }
         header h1{
             color:white;
+            line-height: 60px;
+            padding-left: 20px;
         }
         .contenedor-mapas{
             width:100%;
@@ -28,6 +30,14 @@
             flex:1;
             height:540px;
             border: 2px solid gray;
+        }
+        .location{
+            position: absolute;
+            right:0;
+            top:0;
+            margin: 5px 10px 0 0 ;
+            padding: 15px 20px;
+            font-weight: bold;
         }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -42,17 +52,19 @@
 </head>
 <body>
     <header>
-        <h1>Visor de mapas 3d y 3d</h1>
+        <h1>Visor de mapas 2d y 3d</h1>
+        <button class="location" onclick="obtenerUbicacion();">Compartir ubicación</button>
     </header>
     <section class="contenedor-mapas">
         <article class="mapa" id="mapa2d">
-            Mapa 2d
         </article>
         <article class="mapa" id="mapa3d">
-            Mapa 3d
         </article>
     </section>
     <script>
+
+        var marker;
+
         var mapa2d = L.map('mapa2d').setView([-1.2590876,-78.6239122], 13);
 
         //añadimos capa base del mapa
@@ -65,10 +77,52 @@
         //Cesium.Ion.defaultAccessToken = 'your_access_token';
         var viewer = new Cesium.Viewer('mapa3d');
 
-        viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(-78.7715335, -1.2170556, 12000),
-            duration:10
-        });
+        function obtenerUbicacion(){
+            alert('obtener ubicacion');
+            navigator.geolocation.getCurrentPosition(onSuccess, onError,{});
+        }
+
+        function onSuccess(result){
+            //alert('pudimos acceder a la ubicacion');
+            console.log(result);
+            crearMarcador(result.coords);
+            crearMarcador3D(result.coords);
+        }
+
+        function onError(error){
+            alert(error.message);
+        }
+
+        function crearMarcador(coords){
+            var ubicacion = [coords.latitude, coords.longitude];
+            marker = L.marker(ubicacion,{
+                title:'Mi ubicación'
+            }).addTo(mapa2d);
+
+            //popup con corrdenadas
+            marker.bindPopup("<b>Mi ubicacion: </b><br>" + coords.latitude + " , " + coords.longitude);
+        }
+
+        function crearMarcador3D(coords){
+            //builder para pines
+            var pinBuilder = new Cesium.PinBuilder();
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(coords.longitude, coords.latitude, 500),
+                duration:10,
+                complete:function(){
+                    var bluePin = viewer.entities.add({
+                        name: "Mi Ubicación",
+                        position: Cesium.Cartesian3.fromDegrees(coords.longitude, coords.latitude),
+                        billboard: {
+                            image: pinBuilder.fromColor(Cesium.Color.ROYALBLUE, 48).toDataURL(),
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        },
+                    });
+                    var markerBounds = L.latLngBounds([marker.getLatLng()]);
+                    mapa2d.fitBounds(markerBounds);
+                }
+            });
+        }
     </script>
 </body>
 </html>
