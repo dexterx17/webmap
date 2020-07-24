@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Ironman</title>
+</head>
+
+<body>
+    <section>
+        <img src="bg.jpg" alt="" id="bg">
+        <img src="moon.png" alt="" id="moon">
+        <img src="cloud1.png" alt="" id="cloud1">
+        <img src="cloud2.png" alt="" id="cloud2">
+        <img src="jet.png" alt="" id="jet">
+        <img src="ironman.png" alt="" id="ironman">
+    </section>
+    <div class="sec">
+        <div class="content">
+            <h2>SANTANA ESTUDIO</h2>
+            <p>SANTANA estudio es una agencia creativa, de espíritu joven y multicultural, que nació de una idea. Una idea que se engranó en un garaje y poco a poco, se fue convirtiendo en lo que se ahora, un espacio lleno de gente talentosa que hasta hoy
+                mantienen el empeño de seguir creciendo.</p>
+            <p>Estamos orgullosos de nuestro Crew. Talentosos, honorables y creativos, que junto a sus racionales contra partes hacen una familia de ambidiestros gustosos por darle dignidad a las mejores ideas.</p>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.1/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.to('#bg', {
+            scrollTrigger: {
+                scrub: true
+            },
+            y: 200,
+            scale: 1.5
+        });
+        gsap.to('#moon', {
+            scrollTrigger: {
+                scrub: true
+            },
+            x: -400,
+            scale: 2
+        });
+        gsap.to('#cloud1', {
+            scrollTrigger: {
+                scrub: true
+            },
+            x: -300,
+            y: 500
+        });
+        gsap.to('#cloud2', {
+            scrollTrigger: {
+                scrub: true
+            },
+            x: 300
+        });
+        gsap.to('#jet', {
+            scrollTrigger: {
+                scrub: true
+            },
+            x: 1000,
+            y: 200,
+            scale: 4
+        });
+        gsap.to('#ironman', {
+            scrollTrigger: {
+                scrub: true
+            },
+            x: 0,
+            y: -1800,
+            scale: 1,
+            rotate: -50
+        });
+    </script>
+</body>
+
+</html>

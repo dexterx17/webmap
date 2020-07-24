@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubicación de Usuario en Google Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/grids-responsive-min.css" />
+    <link rel="stylesheet" href="ubicacion.css">
+</head>
+
+<body>
+    <div id="layout" class="pure-g">
+        <div class="sidebar pure-u-1 pure-u-md-1-4">
+            <div class="header">
+                <h1 class="brand-title">Solicitar Ubicación</h1>
+                <hr>
+                <h2 class="brand-tagline">Obtener dirección de usuario con API Maps y Places de Google</h2>
+                <hr>
+            </div>
+            <form class="pure-form">
+                <fieldset class="pure-group">
+                    <input type="text" id="direccion" class="pure-input-1" placeholder="Dirección">
+                    <input type="text" id="ciudad" class="pure-input-1" placeholder="Ciudad" readonly>
+                    <input type="text" id="provincia" class="pure-input-1" placeholder="Locality" readonly>
+                    <input type="text" id="postalcode" class="pure-input-1" placeholder="CodigoPostal" readonly>
+                </fieldset>
+                <fieldset class="pure-group">
+                    <input type="text" id="latitud" class="pure-input-1" placeholder="Latitud" readonly>
+                    <input type="text" id="longitud" class="pure-input-1" placeholder="Longitud" readonly>
+                </fieldset>
+                <button type="button" id="btn" class="pure-button pure-input-1 pure-button-primary">Solicitar Ubicación</button>
+            </form>
+            <div id="consola"></div>
+        </div>
+        <div class="content pure-u-1 pure-u-md-3-4">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        var map;
+        var marker;
+        const __KEY = "AIzaSyCWCHtotBslAgPWOC-03TCIR4rPUxgUUXY";
+
+
+        const btn = document.getElementById('btn');
+
+        //This will display all the available addresses returned by Google's Geocode Api
+        const consola = document.getElementById('consola');
+
+        //Now we listen for a click event on our button
+        btn.addEventListener('click', e => {
+            // hide the button 
+            btn.style.display = "none";
+            // call Materialize toast to update user 
+            alert('fetching your current location');
+            // get the user's position
+            getLocation();
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                //navigator.geolocation.getCurrentPosition(*success, error, [options]*)
+                navigator.geolocation.getCurrentPosition(displayLocation, showError, options);
+            } else {
+                alert("Sorry, your browser does not support this feature... Please Update your Browser to enjoy it");
+            }
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    consola.innerHTML = "You denied the request for your location."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    consola.innerHTML = "Your Location information is unavailable."
+                    break;
+                case error.TIMEOUT:
+                    consola.innerHTML = "Your request timed out. Please try again"
+                    break;
+                case error.UNKNOWN_ERROR:
+                    consola.innerHTML = "An unknown error occurred please try again after some time."
+                    break;
+            }
+        }
+        const options = {
+            enableHighAccuracy: true
+        }
+
+        displayLocation = (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            console.log(`Current Latitude is ${lat} and your longitude is ${lng}`);
+            var latlng = {
+                lat: lat,
+                lng: lng
+            };
+            updateMarker(latlng);
+        }
+
+        function updateMarker(latlng) {
+            document.getElementById('latitud').value = latlng.lat();
+            document.getElementById('longitud').value = latlng.lng();
+
+            let markerOptions = {
+                position: latlng,
+                map: map,
+                draggable: true,
+                animation: google.maps.Animation.BOUNCE,
+                clickable: true,
+            };
+            if (typeof marker === "undefined") {
+                marker = new google.maps.Marker(markerOptions);
+                marker.addListener('dragend', dragendMarker);
+            } else {
+                marker.setPosition(latlng);
+            }
+            map.setCenter(latlng);
+            map.setZoom(16);
+        }
+
+        function dragendMarker(marker) {
+            console.log('endMarker');
+            getGeoLocation(marker.latLng);
+        }
+
+        function getAddressComponent(results, name) {
+            var componente = "";
+            results.map(component => {
+                const types = component.types
+                if (types.includes(name)) {
+                    componente = component.long_name
+                }
+            });
+            return componente;
+        }
+
+        function getGeoLocation(latlng) {
+            console.log('getGeoLocation');
+            document.getElementById('latitud').value = latlng.lat();
+            document.getElementById('longitud').value = latlng.lng();
+            var latngString = latlng.lat() + "," + latlng.lng();
+
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latngString}&key=${__KEY}`)
+                .then(function(res) {
+                    return res.json();
+                })
+                .then(function(data) {
+
+                    var resultados = data.results;
+
+                    var place = resultados[0];
+
+                    document.getElementById('direccion').value = place.formatted_address;
+                    document.getElementById('ciudad').value = getAddressComponent(place.address_components, 'locality');
+                    document.getElementById('postalcode').value = getAddressComponent(place.address_components, 'postal_code');
+                    document.getElementById('provincia').value = getAddressComponent(place.address_components, 'administrative_area_level_1');
+
+                });
+        }
+
+        function initMap() {
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: {
+                    lat: -1.2484608,
+                    lng: -78.6202624
+                },
+                zoom: 10
+            });
+
+            // Create the autocomplete object, restricting the search predictions to
+            // geographical location types.
+            autocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('direccion'), {
+                    types: ['geocode']
+                });
+
+            // Avoid paying for data that you don't need by restricting the set of
+            // place fields that are returned to just the address components.
+            autocomplete.setFields(['address_component', 'geometry.location']);
+
+            // When the user selects an address from the drop-down, populate the
+            // address fields in the form.
+            autocomplete.addListener('place_changed', fillInAddress);
+        }
+
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
+            document.getElementById('ciudad').value = getAddressComponent(place.address_components, 'locality');
+            document.getElementById('postalcode').value = getAddressComponent(place.address_components, 'postal_code');
+            document.getElementById('provincia').value = getAddressComponent(place.address_components, 'administrative_area_level_1');
+            updateMarker(place.geometry.location);
+        }
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWCHtotBslAgPWOC-03TCIR4rPUxgUUXY&libraries=places&callback=initMap&sensor=false"></script>
+</body>
+
+</html>

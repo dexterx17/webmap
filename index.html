@@ -1,74 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visor de mapas 2d y 3d</title>
     <style>
-        *{
-            padding:0;
-            margin:0;
+        * {
+            padding: 0;
+            margin: 0;
         }
-        header{
+        
+        header {
             width: 100%;
             height: 60px;
             background-color: black;
         }
-        header h1{
-            color:white;
+        
+        header h1 {
+            color: white;
+            line-height: 60px;
+            padding-left: 20px;
         }
-        .contenedor-mapas{
-            width:100%;
+        
+        .contenedor-mapas {
+            width: 100%;
             min-height: 350px;
-            background-color: rgba(0,0,0,0.2);
+            background-color: rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: row;
         }
-        .mapa{
-            flex:1;
-            height:540px;
+        
+        .mapa {
+            flex: 1;
+            height: 540px;
             border: 2px solid gray;
         }
+        
+        .location {
+            position: absolute;
+            right: 0;
+            top: 0;
+            margin: 5px 10px 0 0;
+            padding: 15px 20px;
+            font-weight: bold;
+        }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-    crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.70.1/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.70.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 </head>
+
 <body>
     <header>
-        <h1>Visor de mapas 3d y 3d</h1>
+        <h1>Visor de mapas 2d y 3d</h1>
+        <button class="location" onclick="obtenerUbicacion();">Compartir mi ubicación</button>
     </header>
     <section class="contenedor-mapas">
         <article class="mapa" id="mapa2d">
-            Mapa 2d
         </article>
         <article class="mapa" id="mapa3d">
-            Mapa 3d
         </article>
     </section>
     <script>
-        var mapa2d = L.map('mapa2d').setView([-1.2590876,-78.6239122], 13);
+        var mapa2d = L.map('mapa2d').setView([-1.2590876, -78.6239122], 13);
 
         //añadimos capa base del mapa
-        L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            subdomains: ['a','b','c']
-        }).addTo( mapa2d );
+            subdomains: ['a', 'b', 'c']
+        }).addTo(mapa2d);
 
         //incluyendo mapa 3d
         //Cesium.Ion.defaultAccessToken = 'your_access_token';
         var viewer = new Cesium.Viewer('mapa3d');
 
-        viewer.camera.flyTo({
+        /*viewer.camera.flyTo({
             destination: Cesium.Cartesian3.fromDegrees(-78.7715335, -1.2170556, 12000),
-            duration:10
-        });
+            duration: 10
+        });*/
+
+        var marker;
+
+        function obtenerUbicacion() {
+            //alert('Solicitar ubicación de usuario');
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+                enableHighAccuracy: true
+            });
+        }
+
+        function onSuccess(response) {
+            //alert('Pudimos obtener datos');
+            console.log(response);
+            crearMarcador(response.coords);
+            crearMarcador3D(response.coords);
+        }
+
+        function onError(error) {
+            //alert('No pudimos obtener datos');
+            alert(error.message);
+        }
+
+        function crearMarcador(coords) {
+            var ubicacion = [coords.latitude, coords.longitude];
+            marker = L.marker(ubicacion, {
+                title: 'Mi ubicación'
+            }).addTo(mapa2d);
+            //mostramos popup con coordenadas
+            marker.bindPopup("<b>Mi ubicación: </b><br>" + coords.latitude + "," + coords.longitude).openPopup();
+        }
+
+        function crearMarcador3D(coords) {
+            var pinBuilder = new Cesium.PinBuilder();
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(coords.longitude, coords.latitude, 500),
+                duration: 5,
+                complete: function() {
+                    var bluePin = viewer.entities.add({
+                        name: "Mi Ubicación",
+                        position: Cesium.Cartesian3.fromDegrees(coords.longitude, coords.latitude),
+                        billboard: {
+                            image: pinBuilder.fromColor(Cesium.Color.ROYALBLUE, 48).toDataURL(),
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                        },
+                    });
+                    var markerBounds = L.latLngBounds([marker.getLatLng()]);
+                    mapa2d.fitBounds(markerBounds);
+                }
+            });
+
+
+        }
     </script>
 </body>
+
 </html>

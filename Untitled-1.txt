@@ -1,0 +1,26 @@
+https://mimentevuela.wordpress.com/2016/02/20/certificado-ssl-tls-auto-firmado-para-xampp-en-windows/
+
+openssl genrsa -aes256 -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.key 2048
+
+key: webmap.ec
+
+openssl req -new -key c:\xampp\apache\conf\certificados\webmap.ec\webmap.key -config "C:\xampp\php\extras\openssl\openssl.cnf" -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.csr
+
+Country Name (2 letter code) [AU]:EC
+State or Province Name (full name) [Some-State]:Tungurahua
+Locality Name (eg, city) []:Ambato
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:SANTANA
+Organizational Unit Name (eg, section) []:SA
+Common Name (eg, YOUR name) []:webmap.ec
+Email Address []:sistemas@santana.ec
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:webmap.ec
+An optional company name []:SANTANA
+
+copy c:\xampp\apache\conf\certificados\webmap.ec\webmap.key c:\xampp\apache\conf\certificados\webmap.ec\webmap.key.org
+
+openssl rsa -in C:\xampp\apache\conf\certificados\webmap.ec\webmap.key.org -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.key
+
+openssl x509 -req -days 365 -in C:\xampp\apache\conf\certificados\webmap.ec\webmap.csr -signkey C:\xampp\apache\conf\certificados\webmap.ec\webmap.key -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.crt

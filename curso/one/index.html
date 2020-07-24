@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Atardecer</title>
+</head>
+
+<body>
+    <div class="escene">
+        <div class="moon" onclick="toggleScene()"></div>
+        <img src="forest.png" class="forest">
+        <img src="bg.png" class="bg">
+        <img src="cloud1.png" class="cloud1">
+        <img src="cloud2.png" class="cloud2">
+        <img src="cloud3.png" class="cloud3">
+        <img src="cloud1.png" class="cloud4">
+        <img src="cloud2.png" class="cloud5">
+        <img src="cloud3.png" class="cloud6">
+    </div>
+    <script>
+        function toggleScene() {
+            let change = document.querySelector('.escene');
+            change.classList.toggle('active');
+        }
+
+        function stars() {
+            //alert('jo');
+            let count = 500;
+            let i = 0;
+            while (i < count) {
+                let scene = document.querySelector('.escene');
+                let start = document.createElement('i');
+                let x = Math.floor(Math.random() * window.innerWidth);
+                let y = Math.floor(Math.random() * window.innerHeight);
+                let size = Math.random() * 2;
+                let duration = Math.random() * 100;
+                start.style.left = x + 'px';
+                start.style.top = y + 'px';
+                start.style.width = size + 'px';
+                start.style.height = size + 'px';
+                start.style.animationDuration = duration + 's';
+
+                scene.appendChild(start);
+                i++;
+            }
+        }
+        stars();
+    </script>
+</body>
+
+</html>
