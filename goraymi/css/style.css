@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(rgba(255, 255, 255, 1), rgba(0, 0, 0, 0.1));
+}
+
+header {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: grid;
+    grid: auto / 200px 250px auto;
+}
+
+.logo {
+    padding: 10px 20px;
+    background-color: red;
+}
+
+.logo img {
+    width: 150px;
+    height: 40px;
+}
+
+.buscador {
+    background-color: blue;
+}
+
+.top-menu {
+    background-color: white;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    justify-content: space-around;
+}
+
+.nav-list li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    padding: 14px 0 0 0;
+    color: #777;
+}
+
+.nav-list li a span {
+    font-size: 0.76rem;
+}
+
+.nav-list li a:hover {}
+
+.nav-list li.active a {
+    border-bottom: 1px solid #36646e;
+}
+
+.nav-list li a .count {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.nav-list li .icono {
+    display: block;
+    width: 26px;
+    height: 24px;
+    margin: 2px;
+    color: rgba(0, 0, 0, 0.5);
+    background: url(../img/explorer-icons.png) no-repeat 0 0;
+}
+
+.nav-list li:nth-child(1) .icono,
+.nav-list li:nth-child(2) .icono {
+    background-position-x: 0;
+}
+
+.nav-list li:nth-child(3) .icono {
+    background-position-x: -51px;
+}
+
+.nav-list li:nth-child(4) .icono {
+    background-position-x: -102px;
+}
+
+.nav-list li:nth-child(5) .icono {
+    background-position-x: -77px;
+}
+
+.nav-list li:nth-child(6) .icono {
+    background-position-x: -129px;
+}
+
+.nav-list li:nth-child(7) .icono {
+    background-position-x: -154px;
+}
+
+.nav-list .location {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.badge {
+    background-color: orange;
+    color: white;
+    border-radius: 5px;
+    font-size: 0.6rem;
+    padding: 0 4px;
+}
