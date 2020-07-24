@@ -1,0 +1,25 @@
+#Generamos key (Recuera guardar la clave de tu key)
+openssl genrsa -aes256 -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.key 2048
+
+#generamos certificado sin firmar
+openssl req -new -key c:\xampp\apache\conf\certificados\webmap.ec\webmap.key -config "C:\xampp\php\extras\openssl\openssl.cnf" -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.csr
+
+Country Name (2 letter code) [AU]:EC
+State or Province Name (full name) [Some-State]:Tungurahua
+Locality Name (eg, city) []:Ambato
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:SANTANA eCORP
+Organizational Unit Name (eg, section) []:SA
+Common Name (eg, YOUR name) []:webmap.ec
+Email Address []:sistemas@santana.ec
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:
+An optional company name []:
+
+#Generamos una copia del key para firmarlo
+copy c:\xampp\apache\conf\certificados\webmap.ec\webmap.key c:\xampp\apache\conf\certificados\webmap.ec\webmap.key.org
+#Firmamos el key
+openssl rsa -in C:\xampp\apache\conf\certificados\webmap.ec\webmap.key.org -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.key
+
+#Generamos el certificado con el key firmado
+openssl x509 -req -days 365 -in C:\xampp\apache\conf\certificados\webmap.ec\webmap.csr -signkey C:\xampp\apache\conf\certificados\webmap.ec\webmap.key -out C:\xampp\apache\conf\certificados\webmap.ec\webmap.crt

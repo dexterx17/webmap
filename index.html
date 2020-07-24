@@ -56,7 +56,7 @@
 <body>
     <header>
         <h1>Visor de mapas 2d y 3d</h1>
-        <button class="location" onclick="obtenerUbicacion();">Compartir mi ubicación</button>
+        <button class="location" onclick="obtenerUbicacion();">Compartir ubicación</button>
     </header>
     <section class="contenedor-mapas">
         <article class="mapa" id="mapa2d">
@@ -65,6 +65,8 @@
         </article>
     </section>
     <script>
+        var marker;
+
         var mapa2d = L.map('mapa2d').setView([-1.2590876, -78.6239122], 13);
 
         //añadimos capa base del mapa
@@ -77,29 +79,19 @@
         //Cesium.Ion.defaultAccessToken = 'your_access_token';
         var viewer = new Cesium.Viewer('mapa3d');
 
-        /*viewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(-78.7715335, -1.2170556, 12000),
-            duration: 10
-        });*/
-
-        var marker;
-
         function obtenerUbicacion() {
-            //alert('Solicitar ubicación de usuario');
-            navigator.geolocation.getCurrentPosition(onSuccess, onError, {
-                enableHighAccuracy: true
-            });
+            alert('obtener ubicacion');
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, {});
         }
 
-        function onSuccess(response) {
-            //alert('Pudimos obtener datos');
-            console.log(response);
-            crearMarcador(response.coords);
-            crearMarcador3D(response.coords);
+        function onSuccess(result) {
+            //alert('pudimos acceder a la ubicacion');
+            console.log(result);
+            crearMarcador(result.coords);
+            crearMarcador3D(result.coords);
         }
 
         function onError(error) {
-            //alert('No pudimos obtener datos');
             alert(error.message);
         }
 
@@ -108,15 +100,17 @@
             marker = L.marker(ubicacion, {
                 title: 'Mi ubicación'
             }).addTo(mapa2d);
-            //mostramos popup con coordenadas
-            marker.bindPopup("<b>Mi ubicación: </b><br>" + coords.latitude + "," + coords.longitude).openPopup();
+
+            //popup con corrdenadas
+            marker.bindPopup("<b>Mi ubicacion: </b><br>" + coords.latitude + " , " + coords.longitude);
         }
 
         function crearMarcador3D(coords) {
+            //builder para pines
             var pinBuilder = new Cesium.PinBuilder();
             viewer.camera.flyTo({
                 destination: Cesium.Cartesian3.fromDegrees(coords.longitude, coords.latitude, 500),
-                duration: 5,
+                duration: 10,
                 complete: function() {
                     var bluePin = viewer.entities.add({
                         name: "Mi Ubicación",
