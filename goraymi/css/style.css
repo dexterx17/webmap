@@ -28,6 +28,13 @@ header {
 
 .buscador {
     background-color: blue;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.buscador>div {
+    padding: 10px 5px;
 }
 
 .top-menu {
@@ -63,7 +70,7 @@ header {
 .nav-list li a .count {
     position: absolute;
     top: 5px;
-    right: 5px;
+    right: -5px;
 }
 
 .nav-list li .icono {
@@ -84,8 +91,16 @@ header {
     background-position-x: -51px;
 }
 
+.nav-list li:nth-child(3) .badge {
+    background-color: #FF7B40;
+}
+
 .nav-list li:nth-child(4) .icono {
     background-position-x: -102px;
+}
+
+.nav-list li:nth-child(4) .badge {
+    background-color: #997799;
 }
 
 .nav-list li:nth-child(5) .icono {
@@ -108,6 +123,6 @@ header {
     background-color: orange;
     color: white;
     border-radius: 5px;
-    font-size: 0.6rem;
+    font-size: 0.6rem !important;
     padding: 0 4px;
 }

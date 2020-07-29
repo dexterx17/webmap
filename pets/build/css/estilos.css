@@ -1,0 +1,118 @@
+/*00693A*/
+/*50943F*/
+* {
+  margin: 0;
+  padding: 0; }
+
+h1.title {
+  position: absolute;
+  padding-left: 5px;
+  line-height: 50px; }
+
+.header {
+  height: 80px; }
+
+.header .logo {
+  padding: 5px; }
+
+.header .logo img {
+  padding: 0 10px; }
+
+.header .logo:hover {
+  animation-name: logo-hover;
+  animation-duration: 500ms;
+  animation-iteration-count: 1;
+  /*animation-direction: alternate;*/
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards; }
+
+@keyframes logo-hover {
+  0% {
+    transform: scale(1) translateX(0); }
+  100% {
+    transform: scale(1.1) translateX(10px); } }
+
+.navigation {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+  -ms-flex-pack: end;
+      justify-content: flex-end;
+  list-style: none;
+  margin: 0;
+  background: white;
+  -ms-flex-align: center;
+      align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  height: 70px; }
+
+.navigation li {
+  border-right: 1px dotted rgba(0, 0, 0, 0.3); }
+
+/**/
+.navigation li.active {
+  border-bottom: 1px solid #00693A; }
+
+.navigation li.active a:hover {
+  font-weight: 600;
+  border-bottom: 1px solid #50943F; }
+
+.navigation li:last-child {
+  border-right: none; }
+
+.navigation li:nth-child(1) {
+  margin-right: auto;
+  border-right: none; }
+
+.navigation a {
+  text-decoration: none;
+  display: block;
+  padding: 1em;
+  color: #00693A; }
+
+.navigation a:hover {
+  color: #50943F; }
+
+.main-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+  -ms-grid-rows: auto;
+      grid-template-rows: auto;
+  -ms-flex-pack: stretch;
+      justify-content: stretch;
+  overflow: hidden; }
+
+.mapa {
+  background: linear-gradient(#fff, #aaa); }
+
+@media all and (max-width: 800px) {
+  .navigation {
+    -ms-flex-pack: distribute;
+        justify-content: space-around; }
+  .navigation li:nth-child(1) {
+    -ms-flex-preferred-size: 45%;
+        flex-basis: 45%; } }
+
+@media all and (max-width: 600px) {
+  h1.title {
+    position: relative;
+    text-align: center; }
+  .navigation li:nth-child(1) {
+    -ms-flex-preferred-size: auto;
+        flex-basis: auto; }
+  .navigation {
+    -ms-flex-flow: column wrap;
+        flex-flow: column wrap;
+    padding: 0; }
+  .navigation a {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+  .navigation li:last-of-type a {
+    border-bottom: none; }
+  .contenedor-mapas {
+    display: inline-block; } }

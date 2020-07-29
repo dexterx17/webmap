@@ -1,0 +1,42 @@
+{
+  "name": "webmap",
+  "version": "1.0.0",
+  "description": "App de mapas",
+  "main": "index.js",
+  "dependencies": {
+    "purecss": "^2.0.3",
+    "swiper": "^6.0.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.12",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-deporder": "^1.2.0",
+    "gulp-htmlclean": "^2.7.22",
+    "gulp-imacss": "^1.0.0",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-jshint": "^2.1.0",
+    "gulp-newer": "^1.4.0",
+    "gulp-pleeease": "^2.0.2",
+    "gulp-preprocess": "^3.0.3",
+    "gulp-sass": "^4.1.0",
+    "gulp-size": "^3.0.0",
+    "gulp-strip-debug": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
+    "jshint": "^2.11.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dexterx17/webmap.git"
+  },
+  "author": "jaime santana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dexterx17/webmap/issues"
+  },
+  "homepage": "https://github.com/dexterx17/webmap#readme"
+}
